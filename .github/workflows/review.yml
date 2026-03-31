@@ -26,6 +26,6 @@ jobs:
       - name: Run Kratos
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-          GITH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DB_PATH: ./data/chroma_db
+          GITH_TOKEN: ${{ secrets.GITH_TOKEN }}
+          DB_PATH: ${{ secrets.DB_PATH }}
         run: python src/main.py ${{ github.repository }} ${{ github.event.pull_request.number }}
