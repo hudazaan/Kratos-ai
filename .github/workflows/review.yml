@@ -18,7 +18,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install Deps
-        run: pip install google-generativeai chromadb requests python-dotenv
+        run: pip install google-genai chromadb requests python-dotenv
 
       - name: Get Diff
         run: git diff origin/main...HEAD > diff.txt
