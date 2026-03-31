@@ -1,19 +1,21 @@
 import chromadb
 import os
-from pathlib import Path # Add this import at the top
+from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
 
 class KratosContext:
     def __init__(self):
-        # 1. Get the path from your variable: DB_PATH
-        db_path = os.getenv("DB_PATH", "./data/chroma_db")
         
-        # 2. THE FIX: Ensure the directory exists before ChromaDB starts
-        # This creates the 'data' folder automatically in the cloud
-        Path(db_path).parent.mkdir(parents=True, exist_ok=True)
-        
-        # 3. Now initialize the client
-        self.client = chromadb.PersistentClient(path=db_path)
+        base_dir = os.getcwd()
+
+        db_dir = os.path.join(base_dir, "kratos_memory")
+
+        if not os.path.exists(db_dir):
+            os.makedirs(db_dir, exist_ok=True)
+            
+        print(f"DEBUG: Attempting to open DB at: {db_dir}")
+
+        self.client = chromadb.PersistentClient(path=db_dir)
         self.collection = self.client.get_or_create_collection(name="project_context")
