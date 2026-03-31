@@ -1,0 +1,31 @@
+name: Kratos AI Reviewer
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Deps
+        run: pip install google-generativeai chromadb requests python-dotenv
+
+      - name: Get Diff
+        run: git diff origin/main...HEAD > diff.txt
+
+      - name: Run Kratos
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GITH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DB_PATH: ./data/chroma_db
+        run: python src/main.py ${{ github.repository }} ${{ github.event.pull_request.number }}
