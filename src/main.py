@@ -23,12 +23,17 @@ def run_kratos(repo, pr_number, raw_diff):
 
     print(f"--- DEBUG: SCRUBBED REVIEW ---\n{clean_review}\n--------------")
    
-    if "LGTM" not in clean_review and len(clean_review.strip()) > 10: 
+    # if "LGTM" not in clean_review and len(clean_review.strip()) > 10: 
+    #     status = gh.post_comment(repo, pr_number, clean_review)
+    #     print(f"✅ Review posted with status: {status}")
+    # else:
+    #     print("🚀 Code looks good or review was too short. No comments posted.")
+    if len(clean_review.strip()) > 10: 
         status = gh.post_comment(repo, pr_number, clean_review)
         print(f"✅ Review posted with status: {status}")
     else:
-        print("🚀 Code looks good or review was too short. No comments posted.")
-
+        print("🚀 Review was too short. No comments posted.")
+        
     # # DevOps Logic: Post to GitHub
     # print(f"DEBUG: AI Review Output: '{review}'") # Add this line!
 
