@@ -51,7 +51,7 @@ if __name__ == "__main__":
     repo_name = sys.argv[1]
     pr_num = sys.argv[2]
 
-    # Ensure diff.txt exists for the local test
+    # diff.txt exists for the local test
     if not os.path.exists("diff.txt"):
         with open("diff.txt", "w") as f:
             f.write("+ def test():\n+     pass")
