@@ -1,6 +1,6 @@
 name: Kratos AI Reviewer
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, synchronize]
 
 jobs:
@@ -9,10 +9,12 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
       - name: Set up Python
@@ -21,15 +23,17 @@ jobs:
           python-version: '3.11'
 
       - name: Install Deps
-        run: pip install google-genai chromadb requests python-dotenv
+        run: pip install huggingface_hub chromadb requests python-dotenv
 
       - name: Get Diff
-        run: git diff origin/main...HEAD > diff.txt
-
+        run: |
+          git fetch origin main
+          git diff origin/main...HEAD > diff.txt
+          
       - name: Run Kratos
         env:
           # GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-          GITH_TOKEN: ${{ secrets.GITH_TOKEN }}
+          GITHUB _TOKEN: ${{ secrets.GITH_TOKEN }}
           DB_PATH: ${{ secrets.DB_PATH }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: python src/main.py ${{ github.repository }} ${{ github.event.pull_request.number }}
