@@ -1,37 +1,32 @@
 import os
-from google import genai
+from huggingface_hub import InferenceClient
 from dotenv import load_dotenv
 
 load_dotenv()
 
 class KratosBrain:
     def __init__(self):
-
-        api_key = os.getenv("GOOGLE_API_KEY")
-        if not api_key:
-            raise ValueError("GOOGLE_API_KEY not found in .env file")
-            
-        self.client = genai.Client(api_key=api_key)
-        self.model_id = 'gemini-1.5-flash' 
+        token = os.getenv("HF_TOKEN")
+        if not token:
+            raise ValueError("HF_TOKEN not found in .env")
+        
+        self.client = InferenceClient(
+            model="meta-llama/Meta-Llama-3-8B-Instruct",
+            token=token.strip()
+        )
 
     def analyze(self, diff, context):
-        prompt = f"""
-        Act as a Senior Engineer. Review this diff with the provided project context.
-        
-        CONTEXT: {context}
-        
-        DIFF: {diff}
-        
-        INSTRUCTIONS:
-        - Identify critical bugs or security risks.
-        - If the code is fine, reply only with 'LGTM'.
-        """
-        
         try:
-            response = self.client.models.generate_content(
-                model=self.model_id,
-                contents=prompt
+            # We use chat_completion to satisfy the 'conversational' task requirement
+            response = self.client.chat_completion(
+                messages=[
+                    {"role": "system", "content": "You are a Senior Engineer. Review this code for bugs and security risks. If it's fine, reply only 'LGTM'."},
+                    {"role": "user", "content": f"Context: {context}\n\nDiff: {diff}"}
+                ],
+                max_tokens=500,
+                temperature=0.1
             )
-            return response.text
+            return response.choices[0].message.content
+            
         except Exception as e:
-            return f"Error during AI analysis: {str(e)}"
+            return f"AI Error: {str(e)}"

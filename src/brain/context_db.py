@@ -19,3 +19,11 @@ class KratosContext:
 
         self.client = chromadb.PersistentClient(path=db_dir)
         self.collection = self.client.get_or_create_collection(name="project_context")
+        
+    def get_relevant_context(self, diff):
+        try:
+            results = self.collection.query(query_texts=[diff], n_results=1)
+            docs = results.get('documents', [[]])[0]
+            return docs[0] if docs else "No context found."
+        except:
+            return "Context lookup skipped."
