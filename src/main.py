@@ -60,3 +60,8 @@ if __name__ == "__main__":
         diff_content = f.read()
     
     run_kratos(repo_name, pr_num, diff_content)
+
+def test_security_risk():
+    # This will force Llama 3 to write a long review
+    api_key = "AIzaSyA12345678901234567890123456789012"
+    return api_key

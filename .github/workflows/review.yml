@@ -32,7 +32,7 @@ jobs:
       - name: Run Kratos
         env:
           # GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITH_TOKEN }}
+          GITH_TOKEN: ${{ secrets.GITH_TOKEN }}
           DB_PATH: ${{ secrets.DB_PATH }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: python src/main.py ${{ github.repository }} ${{ github.event.pull_request.number }}
