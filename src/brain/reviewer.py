@@ -20,7 +20,7 @@ class KratosBrain:
             # We use chat_completion to satisfy the 'conversational' task requirement
             response = self.client.chat_completion(
                 messages=[
-                    {"role": "system", "content": "You are a Senior Engineer. Review this code for bugs and security risks. If it's fine, reply only 'LGTM'."},
+                    {"role": "system", "content": "You are a Senior Engineer. Review this code for bugs, security risks, and logic errors. If you find issues, list them clearly. DO NOT say 'LGTM' unless the code is perfect. Be critical."},
                     {"role": "user", "content": f"Context: {context}\n\nDiff: {diff}"}
                 ],
                 max_tokens=500,
