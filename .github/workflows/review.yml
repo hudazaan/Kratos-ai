@@ -29,10 +29,16 @@ jobs:
           git fetch origin main
           git diff origin/main...HEAD > diff.txt
           
+      - name: Index Project Context
+        env:
+          DB_PATH: "kratos_memory" 
+        run: python src/index_repo.py 
+
       - name: Run Kratos
         env:
           # GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           GITH_TOKEN: ${{ secrets.GITH_TOKEN }}
-          DB_PATH: ${{ secrets.DB_PATH }}
+          DB_PATH: "kratos_memory"
+          # DB_PATH: ${{ secrets.DB_PATH }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: python src/main.py ${{ github.repository }} ${{ github.event.pull_request.number }}
