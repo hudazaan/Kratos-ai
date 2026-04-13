@@ -6,12 +6,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class KratosContext:
-    def __init__(self):
+    def __init__(self, path=None):
+        if path:
+            db_dir = path
+        else:
+             db_dir = os.getenv("DB_PATH", "kratos_memory")
         
-        base_dir = os.getcwd()
-
-        db_dir = os.path.join(base_dir, "kratos_memory")
-
+        db_dir = os.path.abspath(db_dir)
+        
         if not os.path.exists(db_dir):
             os.makedirs(db_dir, exist_ok=True)
             
